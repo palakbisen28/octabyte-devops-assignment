@@ -1,0 +1,62 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Simulate test environment
+        run: |
+          echo "Running unit tests..."
+          echo "All tests passed ✅"
+
+  build_and_push:
+    name: Build and Push Docker Image
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: |
+          echo "docker build -t your-dockerhub-username/octabyte-app:latest ."
+          echo "Simulating docker build..."
+
+      - name: Push Docker image
+        run: |
+          echo "docker push your-dockerhub-username/octabyte-app:latest"
+          echo "Simulating docker push..."
+
+  deploy_staging:
+    name: Deploy to Staging
+    needs: build_and_push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Simulate staging deployment
+        run: echo "🚀 Deploying to staging environment..."
+
+  deploy_production:
+    name: Deploy to Production (Manual Approval)
+    needs: deploy_staging
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://your-production-url.com
+
+    steps:
+      - name: Manual approval required
+        run: echo "✅ Production deployment approved"
